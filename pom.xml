@@ -20,6 +20,7 @@
     <modules>
         <module>00-simple</module>
         <module>01-configserver</module>
+        <module>10-orderservice</module>
     </modules>
 
     <properties>
