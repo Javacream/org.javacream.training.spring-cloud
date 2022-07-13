@@ -1,2 +1,2 @@
-some:
-  string: I am the someApp string
+greeting:
+  message: A greeting from some-app

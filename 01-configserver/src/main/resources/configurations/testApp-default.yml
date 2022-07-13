@@ -1,2 +1,2 @@
-some:
-  string: I am the testApp default string
+greeting:
+  message: A default greeting from test-app

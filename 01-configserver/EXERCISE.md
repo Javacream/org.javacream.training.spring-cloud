@@ -11,7 +11,7 @@ im Projekt folgende Werte:
    spring.cloud.config.server.native.searchLocations=classpath:/configurations
     ````
 5. Legen Sie im Projekt ein leeres Verzeichnis `src/main/resources/configurations`
-6. Erstellen Sie dort Dateien folgende Dateien, jeweils mit mind. einem Propety:
+6. Erstellen Sie dort Dateien folgende Dateien, jeweils mit mind. dem Property `greeting.message`:
    1. `someApp.yml`
    2. `testApp-default.yml`
    3. `testApp-testProfile.yml`
@@ -21,5 +21,7 @@ speichern dies in einer neuen Datei `src/main/resources/banner.txt` ab.
 9. Rufen Sie folgende URLs auf -- was fällt Ihnen auf?
    1. http://localhost:8888/someApp/default
    1. http://localhost:8888/someApp/testProfile
+   1. http://localhost:8888/someApp/xyz
    2. http://localhost:8888/testApp/default
    3. http://localhost:8888/testApp/testProfile
+   3. http://localhost:8888/testApp/xyz
