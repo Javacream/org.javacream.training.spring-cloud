@@ -16,7 +16,7 @@ public class OrderService {
     private final ProductClient productClient;
 
     public Order placeOrder(String mobilePhoneNumber, Map<String,Integer> productQuantities) {
-        productQuantities.keySet().forEach(productClient::getProduct);
+        productQuantities.keySet().parallelStream().forEach(productClient::getProduct);
         return null;
     }
 

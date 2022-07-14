@@ -148,8 +148,10 @@ und starten Sie diesen neu
    </dependencies>
     ````
 2. Erstellen Sie eine Klasse "ProductService", der eine Methode `Product getProduct(String productId)` enthält.
-Diese soll ein Dummy-Produkt mit Namen und Id ausliefern.
-3. Machen Sie die Ausführung der Methode absichtlich langsam, indem Sie ein `Thread.sleep(1000)` einbauen.
+Diese soll ein Dummy-Produkt mit Namen und Id ausliefern
+3. Machen Sie die Ausführung der Methode absichtlich langsam, indem Sie ein `Thread.sleep(1000)` einbauen
+4. Zu Beginn der Methode (vor dem sleep) soll eine Logging-Ausgabe erfolgen, sodass wir sehen
+können, dass diese Methode und für welche `productId` sie aufgerufen wurde
 
 ### D3) REST API
 
@@ -292,3 +294,25 @@ Request. Dieser kann folgendes JSON im Body übertragen:
 oben auf. Wie lange dauert die Anfrage?
 4. Fügen Sie zwei weitere Produkte (unterschiedliche productId) dem Aufruf hinzu. 
 Wie lange dauert der Aufruf nun? Warum?
+
+
+## F) Load-Balancing mit mehreren Service-Instanzen
+
+Wir wollen nun den langsamen Product-Service in mehreren Instanzen laufen lassen und
+somit einen schnelleren Bestellprozess bewirken.
+
+### F1) Bestellung gegen mehrere Instanzen
+
+1. Starten Sie zwei zusätzliche Instanzen vom Product-Service, die auf den Ports 8082 und 8083
+hören (z.B. mit der VM Option `-Dserver.Port=8082`)
+2. Starten Sie den Order-Service neu, damit dieser auf jeden Fall alle neuen Instanzen findet
+3. Führen Sie erneut den Bestellprozess aus. Welcher Product-Service wird mit welcher `productId`
+aufgerufen?
+4. Geht es nun schneller?
+
+### F2) Optimierung
+
+1. Schauen Sie sich Ihre Implementierung der `OrderService.placeOrder()` Methode an. Was muss
+hier geändert werden, damit der Programmablauf gleichzeitig mehrere Services ansprechen kann?
+2. Starten Sie den Order-Service neu
+3. Führen Sie erneut den Bestellprozess aus. Geht es nun schneller?
