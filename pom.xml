@@ -22,6 +22,7 @@
         <module>01-configserver</module>
         <module>10-orderservice</module>
         <module>02-registryserver</module>
+        <module>11-productservice</module>
     </modules>
 
     <properties>
