@@ -369,11 +369,11 @@ Wir wollen nun unsere bisherige Infrastruktur nach Heroku deployen, dafür brauc
 Jedes dieser Deployments soll unter einem "prod" Profil laufen. Die Konfiguration aller
 Instanzen soll mit Git (nicht mehr Dateisystem) ausgeliefert werden.
 
-## G1) Planung
+### G1) Planung
 
 1. Planen Sie das Deployment -- wer deployt welche Anwendungen?
 
-## G2) Vorbereitung
+### G2) Vorbereitung
 
 1. Erstellen Sie in den von Ihnen zu deployenden Anwendungen eine `application-prod.properties`,
 welche
@@ -383,8 +383,20 @@ welche
 3. Erstellen Sie Dockerfiles, um jede Anwendung als Container nach Heroku pushen zu können. 
 Bitte daran denken, dass das "prod" Profil auf aktiv gesetzt wird (`-Dspring.profiles.active=prod`)!
 
-## G3) Durchführung
+### G3) Durchführung
 
 1. Führen Sie die Deployments durch und testen Sie nach jedem Deployment, ob das Zusammenspiel
 funktioniert
 2. Lassen Sie sich die Log-Ausgaben eines Containers 
+
+
+## H) Distributed Tracing
+
+- zipkin starten via docker `docker run -d -p 9411:9411 openzipkin/zipkin`
+- pom dependencies to product und order
+- log ausgaben zwecks übersicht
+- @newSpan an service methoden
+- anwendungen neustarten
+- placeorder absetzen
+- warum werden drei traces erzeugt? wegen parallel-stream.. könnte durch async/completable-future
+ersetzt werden
