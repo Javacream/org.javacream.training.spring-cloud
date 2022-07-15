@@ -1,5 +1,44 @@
 # Übungen 
 
+## Mini-Anwendung auf Heroku
+
+### 1) Anwendung erstellen
+1. Erstellen Sie mit dem Spring Initializer ein einfaches Projekt inkl. der "web" Starter Dependency
+2. Programmieren Sie einen simplen Controller, der auf eine Web-Anfrage ein "Hello!" ausgibt
+
+### 2) Anwendung via Maven Plugin starten
+
+1. Bauen Sie die Anwendung mittels `mvnw clean package`
+4. Starten Sie Ihre Anwendung mittels `mvnw spring-boot:run`
+5. Testen Sie den Web-Endpunkt lokal, z.B. via http://localhost:8080/hello
+
+### 3) Anwendung via Docker starten
+
+1. Legen Sie ein Dockerfile an, um ein Image zur Ausführung der Anwendung mittels Container bauen zu können
+   ````dockerfile
+   FROM adoptopenjdk/openjdk11:latest
+   RUN mkdir -p /app
+   ADD target/simple-1.0-SNAPSHOT.jar /app/simple.jar
+   CMD java -Dserver.port=$PORT $JAVA_OPTS -jar /app/simple.jar
+   ````
+2. Bauen Sie das Image, z.B. mit `docker build --tag simple:latest .`
+3. Führen Sie das Image aus und exportieren Sie den Port 8080 nach außen: `docker run -it -p 8080:8080 simple:latest`
+4. Testen Sie den Web-Endpunkt lokal, z.B. via http://localhost:8080/hello
+
+### 4) Heroku vorbereiten
+1. Melden Sie sich bei Heroku an oder registrieren Sie dort einen Account (kostenfrei)
+2. Installieren Sie die Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
+   (auf Windows z.B. den 64-bit Installer herunterladen)
+3. Führen Sie `heroku login` aus, um die CLI mit Ihrem Account anzumelden
+
+### 5) Deployment auf Heroku
+1. Erstellen Sie eine neue Heroku App: `heroku create`
+2. Pushen Sie den Container in die Container Registry der App: `heroku container:push web --app=<app-name>`
+3. Geben Sie den Container frei: `heroku container:release web --app=<app-name>`
+4. Öffnen Sie die App: `heroku open --app=<app-name>`
+5. Ergänzen Sie die URL mit dem von Ihnen programmierten Pfad für die Begrüßung
+
+
 ## A) ConfigServer
 
 ### A1) Setup
@@ -33,7 +72,7 @@ im Projekt folgende Werte:
    - http://localhost:8888/testApp/testProfile
    - http://localhost:8888/testApp/xyz
 
-## B) OrderService
+## B) OrderService als Config-Client
 
 ### B1) Setup
 
@@ -79,12 +118,12 @@ Sie http://localhost:8080/orders/greeting auf
 
 ### B3) Spezifische konfiguration
 1. Ändern Sie den Anwendungsnamen auf "orderservice"
-2. Legen Sie eine neue `orderservice-default.yml` Datei im "configserver" Projekt an 
-und starten Sie diesen neu
-3. Starten Sie die Orderservice-Anwendung erneut und rufen Sie http://localhost:8080/orders/greeting auf
+2. Legen Sie eine neue `orderservice-default.yml` Datei im "configserver" Projekt an, die
+ebenfalls das Property `greeting.message` enthält
+4. Starten Sie die Orderservice-Anwendung erneut und rufen Sie http://localhost:8080/orders/greeting auf
 
 
-## C) RegistryServer
+## C) Registry-Server
 
 ### C1) Setup
 
@@ -113,7 +152,7 @@ und starten Sie diesen neu
 2. Rufen Sie folgende URL auf, um das Admin Dashboard anzuzeigen: http://localhost:8761/
 
 
-## D) ProductService
+## D) ProductService als Registry-Client
 
 ### D1) Setup
 
@@ -316,3 +355,36 @@ aufgerufen?
 hier geändert werden, damit der Programmablauf gleichzeitig mehrere Services ansprechen kann?
 2. Starten Sie den Order-Service neu
 3. Führen Sie erneut den Bestellprozess aus. Geht es nun schneller?
+
+
+## G) Heroku Deployment
+
+Wir wollen nun unsere bisherige Infrastruktur nach Heroku deployen, dafür brauchen wir
+
+- einen ConfigServer
+- einen RegistryServer
+- einen OrderService
+- mehrere ProductServices 
+
+Jedes dieser Deployments soll unter einem "prod" Profil laufen. Die Konfiguration aller
+Instanzen soll mit Git (nicht mehr Dateisystem) ausgeliefert werden.
+
+## G1) Planung
+
+1. Planen Sie das Deployment -- wer deployt welche Anwendungen?
+
+## G2) Vorbereitung
+
+1. Erstellen Sie in den von Ihnen zu deployenden Anwendungen eine `application-prod.properties`,
+welche
+   - im Falle des Config-Servers ein GitHub repository als Konfigurations-Quelle nutzt
+   - im Falle des Registry-Servers den Heroku Hostname und Port nutzt
+2. Erstellen Sie das GitHub Repository mit den benötigten Konfigurationsdateien. 
+3. Erstellen Sie Dockerfiles, um jede Anwendung als Container nach Heroku pushen zu können. 
+Bitte daran denken, dass das "prod" Profil auf aktiv gesetzt wird (`-Dspring.profiles.active=prod`)!
+
+## G3) Durchführung
+
+1. Führen Sie die Deployments durch und testen Sie nach jedem Deployment, ob das Zusammenspiel
+funktioniert
+2. Lassen Sie sich die Log-Ausgaben eines Containers 
