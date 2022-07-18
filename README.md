@@ -32,6 +32,8 @@ $ mvn clean package
 $ heroku container:push web --app <app-name-from-create>
 $ heroku container:release web --app <app-name-from-create>
 $ heroku open --app <app-name-from-create>
+$ heroku logs --tail --app <app-name-from-create>
+$ heroku logs -n 100 --app <app-name-from-create>
 ````
 
 

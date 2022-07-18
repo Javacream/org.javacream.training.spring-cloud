@@ -38,6 +38,7 @@
 3. Geben Sie den Container frei: `heroku container:release web --app=<app-name>`
 4. Öffnen Sie die App: `heroku open --app=<app-name>`
 5. Ergänzen Sie die URL mit dem von Ihnen programmierten Pfad für die Begrüßung
+6. Lassen Sie sich die Logs von Heroku anzeigen (siehe README.md für Heroku Kommandos)
 
 
 ## A) ConfigServer
