@@ -44,17 +44,18 @@
 ## A) ConfigServer
 
 ### A1) Setup
-1. Erstellen Sie ein neues Maven-Modul mit Namen "my-configserver"
+1. Erstellen Sie ein neues Maven-Modul mit Namen "my-configserver" -- bitte darauf achten, dass
+das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 2. Fügen Sie die `spring-cloud-config-server` Dependency der pom.xml hinzu
 3. Erstellen Sie die Applikationsklasse
 4. Konfigurieren Sie mittels einer neuen `src/main/resources/application.properties` Datei
 im Projekt folgende Werte:
     ````properties
-   server.port: 8888
+   server.port=8888
    spring.profiles.active=native
    spring.cloud.config.server.native.searchLocations=classpath:/configurations
     ````
-7. Erzeugen Sie im Internet ein hübsche ASCII Art Ausgabe für den Text "Config Server" und
+5. Erzeugen Sie im Internet ein hübsche ASCII Art Ausgabe für den Text "Config Server" und
    speichern dies in einer neuen Datei `src/main/resources/banner.txt` ab.
 
 ### A2) Konfigurationen hinterlegen
@@ -78,7 +79,8 @@ im Projekt folgende Werte:
 
 ### B1) Setup
 
-1. Erstellen Sie ein neues Maven-Modul mit Namen "my-orderservice"
+1. Erstellen Sie ein neues Maven-Modul mit Namen "my-orderservice" -- bitte darauf achten, dass
+das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 1. Fügen Sie folgende Dependencies der pom.xml hinzu:
     ````xml
    <dependencies>
@@ -103,7 +105,7 @@ im Projekt folgende Werte:
 2. Erstellen Sie die Applikationsklasse
 3. Definieren Sie den Applikationsnamen und die Quelle der zu importierenden Properties fest (`application.properties`):
     ````properties
-    spring.application.name: someApp
+    spring.application.name=someApp
     spring.config.import=configserver:http://localhost:8888
     ````
 
@@ -129,7 +131,8 @@ ebenfalls das Property `greeting.message` enthält
 
 ### C1) Setup
 
-1. Erstellen Sie ein neues Maven-Modul mit Namen "my-registryserver"
+1. Erstellen Sie ein neues Maven-Modul mit Namen "my-registryserver" -- bitte darauf achten, dass
+das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 2. Fügen Sie folgende Dependency der pom.xml hinzu:
     ````xml
     <dependency>
@@ -141,7 +144,7 @@ ebenfalls das Property `greeting.message` enthält
 4. Hinterlegen Sie folgende Konfiguration  in der `application.properties`, womit der Server auf
    einem alternativen Port im Standalone-Modus gestartet wird:
     ````properties
-    server.port: 8761
+    server.port=8761
     eureka.instance.hostname=localhost
     eureka.client.register-with-eureka=false
     eureka.client.fetch-registry=false
