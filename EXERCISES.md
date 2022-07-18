@@ -30,6 +30,7 @@
 2. Installieren Sie die Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
    (auf Windows z.B. den 64-bit Installer herunterladen)
 3. Führen Sie `heroku login` aus, um die CLI mit Ihrem Account anzumelden
+4. Führen Sie ein `heroku container:login` aus, um sich auch gegenüber der Heroku Container Registry anzumelden
 
 ### 5) Deployment auf Heroku
 1. Erstellen Sie eine neue Heroku App: `heroku create`
