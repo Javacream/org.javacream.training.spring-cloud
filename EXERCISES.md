@@ -30,6 +30,7 @@
 2. Installieren Sie die Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
    (auf Windows z.B. den 64-bit Installer herunterladen)
 3. Führen Sie `heroku login` aus, um die CLI mit Ihrem Account anzumelden
+4. Führen Sie ein `heroku container:login` aus, um sich auch gegenüber der Heroku Container Registry anzumelden
 
 ### 5) Deployment auf Heroku
 1. Erstellen Sie eine neue Heroku App: `heroku create`
@@ -37,22 +38,24 @@
 3. Geben Sie den Container frei: `heroku container:release web --app=<app-name>`
 4. Öffnen Sie die App: `heroku open --app=<app-name>`
 5. Ergänzen Sie die URL mit dem von Ihnen programmierten Pfad für die Begrüßung
+6. Lassen Sie sich die Logs von Heroku anzeigen (siehe README.md für Heroku Kommandos)
 
 
 ## A) ConfigServer
 
 ### A1) Setup
-1. Erstellen Sie ein neues Maven-Modul mit Namen "my-configserver"
+1. Erstellen Sie ein neues Maven-Modul mit Namen "my-configserver" -- bitte darauf achten, dass
+das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 2. Fügen Sie die `spring-cloud-config-server` Dependency der pom.xml hinzu
 3. Erstellen Sie die Applikationsklasse
 4. Konfigurieren Sie mittels einer neuen `src/main/resources/application.properties` Datei
 im Projekt folgende Werte:
     ````properties
-   server.port: 8888
+   server.port=8888
    spring.profiles.active=native
    spring.cloud.config.server.native.searchLocations=classpath:/configurations
     ````
-7. Erzeugen Sie im Internet ein hübsche ASCII Art Ausgabe für den Text "Config Server" und
+5. Erzeugen Sie im Internet ein hübsche ASCII Art Ausgabe für den Text "Config Server" und
    speichern dies in einer neuen Datei `src/main/resources/banner.txt` ab.
 
 ### A2) Konfigurationen hinterlegen
@@ -76,7 +79,8 @@ im Projekt folgende Werte:
 
 ### B1) Setup
 
-1. Erstellen Sie ein neues Maven-Modul mit Namen "my-orderservice"
+1. Erstellen Sie ein neues Maven-Modul mit Namen "my-orderservice" -- bitte darauf achten, dass
+das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 1. Fügen Sie folgende Dependencies der pom.xml hinzu:
     ````xml
    <dependencies>
@@ -101,7 +105,7 @@ im Projekt folgende Werte:
 2. Erstellen Sie die Applikationsklasse
 3. Definieren Sie den Applikationsnamen und die Quelle der zu importierenden Properties fest (`application.properties`):
     ````properties
-    spring.application.name: someApp
+    spring.application.name=someApp
     spring.config.import=configserver:http://localhost:8888
     ````
 
@@ -127,7 +131,8 @@ ebenfalls das Property `greeting.message` enthält
 
 ### C1) Setup
 
-1. Erstellen Sie ein neues Maven-Modul mit Namen "my-registryserver"
+1. Erstellen Sie ein neues Maven-Modul mit Namen "my-registryserver" -- bitte darauf achten, dass
+das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 2. Fügen Sie folgende Dependency der pom.xml hinzu:
     ````xml
     <dependency>
@@ -139,7 +144,7 @@ ebenfalls das Property `greeting.message` enthält
 4. Hinterlegen Sie folgende Konfiguration  in der `application.properties`, womit der Server auf
    einem alternativen Port im Standalone-Modus gestartet wird:
     ````properties
-    server.port: 8761
+    server.port=8761
     eureka.instance.hostname=localhost
     eureka.client.register-with-eureka=false
     eureka.client.fetch-registry=false
@@ -369,11 +374,11 @@ Wir wollen nun unsere bisherige Infrastruktur nach Heroku deployen, dafür brauc
 Jedes dieser Deployments soll unter einem "prod" Profil laufen. Die Konfiguration aller
 Instanzen soll mit Git (nicht mehr Dateisystem) ausgeliefert werden.
 
-## G1) Planung
+### G1) Planung
 
 1. Planen Sie das Deployment -- wer deployt welche Anwendungen?
 
-## G2) Vorbereitung
+### G2) Vorbereitung
 
 1. Erstellen Sie in den von Ihnen zu deployenden Anwendungen eine `application-prod.properties`,
 welche
@@ -383,8 +388,20 @@ welche
 3. Erstellen Sie Dockerfiles, um jede Anwendung als Container nach Heroku pushen zu können. 
 Bitte daran denken, dass das "prod" Profil auf aktiv gesetzt wird (`-Dspring.profiles.active=prod`)!
 
-## G3) Durchführung
+### G3) Durchführung
 
 1. Führen Sie die Deployments durch und testen Sie nach jedem Deployment, ob das Zusammenspiel
 funktioniert
 2. Lassen Sie sich die Log-Ausgaben eines Containers 
+
+
+## H) Distributed Tracing
+
+- zipkin starten via docker `docker run -d -p 9411:9411 openzipkin/zipkin`
+- pom dependencies to product und order
+- log ausgaben zwecks übersicht
+- @newSpan an service methoden
+- anwendungen neustarten
+- placeorder absetzen
+- warum werden drei traces erzeugt? wegen parallel-stream.. könnte durch async/completable-future
+ersetzt werden
