@@ -260,6 +260,10 @@ eureka:
 3. Führen Sie folgenden Befehl aus: `ab.exe -n 10 -c 1 http://localhost:8081/products/123`
 4. Und dann `ab.exe -n 100 -c 10 http://localhost:8081/products/123` -- was können Sie aus den Ergebnissen ablesen?
 
+### D7) Optional: Zones
+1. Sie können mehrere Clients in verschiedenen Zones und/oder Regionen konfigurieren
+2. Was verändert sich beim Start dieser Clients?
+
 
 ## E) OrderService nutzt ProductService
 
