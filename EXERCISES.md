@@ -156,6 +156,21 @@ das neue Modul mit der übergeordneten "pom.xml" via <parent> verbunden ist
 1. Starten Sie den Registry-Server
 2. Rufen Sie folgende URL auf, um das Admin Dashboard anzuzeigen: http://localhost:8761/
 
+### C3) High-Availability
+
+1. Erstellen Sie zwei Konfigurationsprofile, um zwei Instanzen mit gegenseitigem 
+Register/Fetch zu betreiben
+2. Starten Sie beide Instanzen mit Ihrem jeweiligen Profil
+3. Was verändert sich im Dashboard jedes Servers?
+
+### C4) Zones
+
+1. Erstellen Sie zwei weitere Konfigurationsprofile, um zwei Instanzen in 
+unterschiedlichen Zones zu betreiben
+2. Starten Sie beide Instanzen mit Ihrem jeweiligen Profil
+3. Was verändert sich im Dashboard jedes Servers?
+4. Optional: Sie können auch weitere Instanzen starten, z.B. die in einer anderen Region liegen
+
 
 ## D) ProductService als Registry-Client
 
@@ -201,7 +216,8 @@ können, dass diese Methode und für welche `productId` sie aufgerufen wurde
 
 1. Erstellen Sie eine Klasse "ProductRestApi", die mit `@RestController` annotiert ist
 2. Injecten Sie hierein den `ProductService`
-3. Implementieren Sie einen `GET /products/{productId}` Endpoint, der ein Produkt mittels dieses Service ausliefert
+3. Implementieren Sie einen `GET /products/{productId}` Endpoint, der ein Produkt 
+mittels dieses Service ausliefert
 
 ### D4) Service Registrierung
 
