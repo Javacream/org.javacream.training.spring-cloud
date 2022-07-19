@@ -177,12 +177,14 @@ unterschiedlichen Zones zu betreiben
 ### D1) Setup
 
 1. Erstellen Sie ein neues Maven-Modul mit Namen "my-productservice"
-3. Erstellen Sie die Applikationsklasse
-4. Definieren Sie den Applikationsnamen und die Quelle der zu importierenden Properties fest (`application.properties`):
+2. Erstellen Sie die Applikationsklasse
+3. Definieren Sie den Applikationsnamen und die Quelle der zu importierenden Properties fest (`application.properties`):
     ````properties
     spring.application.name: productservice
     spring.config.import=configserver:http://localhost:8888
     ````
+4. Denken Sie an die Basic-Auth Konfiguration des Config-Servers, wenn dies erfolgt ist (analog OrderService)
+
 ### D2) Geschäftslogik
 
 1. Fügen Sie folgende Dependencies der pom.xml hinzu:
@@ -309,8 +311,8 @@ public Order placeOrder(String mobilePhoneNumber, Map<String,Integer> productQua
 
 Wir erstellen einen einfachen Test, der die Integration mit einem echten ProductClient mockt.
 
-1. Erstellen Sie im `src/main/test` Order die Klasse `OrderServiceTest`
-2. Ergänzen Sie den folgenden Testfall, so dass dieser erfolgreich durchläuft:
+1. Erstellen Sie im `src/main/test` Order die Klasse `OrderServiceTest_MockedClients`
+2. Ergänzen Sie den folgenden Testfall, sodass dieser erfolgreich durchläuft:
 ````java
 @SpringBootTest
 class OrderServiceTest_MockedClients {
@@ -360,6 +362,7 @@ oben auf. Wie lange dauert die Anfrage?
 Wie lange dauert der Aufruf nun? Warum?
 
 
+
 ## F) Load-Balancing mit mehreren Service-Instanzen
 
 Wir wollen nun den langsamen Product-Service in mehreren Instanzen laufen lassen und
@@ -382,12 +385,13 @@ hier geändert werden, damit der Programmablauf gleichzeitig mehrere Services an
 3. Führen Sie erneut den Bestellprozess aus. Geht es nun schneller?
 
 
+
 ## G) Heroku Deployment
 
 Wir wollen nun unsere bisherige Infrastruktur nach Heroku deployen, dafür brauchen wir
 
-- einen ConfigServer
-- einen RegistryServer
+- mindestens einen ConfigServer
+- mindestens einen RegistryServer
 - einen OrderService
 - mehrere ProductServices 
 
@@ -412,16 +416,144 @@ Bitte daran denken, dass das "prod" Profil auf aktiv gesetzt wird (`-Dspring.pro
 
 1. Führen Sie die Deployments durch und testen Sie nach jedem Deployment, ob das Zusammenspiel
 funktioniert
-2. Lassen Sie sich die Log-Ausgaben eines Containers 
+2. Lassen Sie sich die Log-Ausgaben eines Containers anzeigen (siehe README.md für Befehl)
+
 
 
 ## H) Distributed Tracing
 
-- zipkin starten via docker `docker run -d -p 9411:9411 openzipkin/zipkin`
-- pom dependencies to product und order
-- log ausgaben zwecks übersicht
-- @newSpan an service methoden
-- anwendungen neustarten
-- placeorder absetzen
-- warum werden drei traces erzeugt? wegen parallel-stream.. könnte durch async/completable-future
-ersetzt werden
+### H1) Zpikon
+
+1. Starten Sie Zipkin via Docker: `docker run -d -p 9411:9411 openzipkin/zipkin`
+
+### H2) Anwendung ergänzen
+
+1. Fügen Sie benötigte Dependencies für die Services `product` und `order` hinzu:
+    ````xml
+   <dependencies>   
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+            <version>2.2.8.RELEASE</version>        <!-- why is this version not in cloud BOM?? -->
+        </dependency>
+    </dependencies>
+    ````
+2. Falls noch nicht vorhanden, fügen Sie in beiden Services Log-Ausgaben in die 
+`NnnnnService` und `NnnnnRestApi` Klassen ein
+
+### H3) Traces erzeugen und sehen
+1. Starten Sie die Anwendungen neu
+4. Führen Sie per REST API eine Bestellung aus
+5. Öffnen Sie http://localhost:9411 zur Darstellung der Traces in Zipkin
+
+### H4) Span einfügen
+1. Ergänzen Sie die Geschäftslogik-Methoden um eine `@NewSpan` Annotation
+2. Starten Sie die Anwendungen neu
+3. Führen Sie per REST API eine Bestellung aus
+4. Öffnen Sie http://localhost:9411 zur Darstellung der Traces in Zipkin -- was hat sich geändert?
+5. Warum werden trotz eines Requests drei Traces erzeugt? Wie könnte man das beheben?
+6. Optional: verändern Sie Ihren Code, so dass nur noch ein Trace erzeugt wird
+
+
+
+## I) CircuitBreaker
+
+### I1) CustomerService
+
+1. Implementieren Sie in einem neuen Modul "my-customerservice" einen weiteren Business-Service
+namens "customerservice" (analog des "productservice", also Service und Api Klasse)
+2. Dieser Dienst kann Kunden anhand deren Mobilnummer abfragen, wie z.B.
+````
+GET http://localhost:8082/customers?phoneNumber=0172-345678
+{
+   "id": 112233,
+   "name": "Enrico Pallazzo",
+   "phoneNumber": "0172-345678"
+}
+````
+3. Dieser Dienst soll bewusst schlecht arbeiten, d.h. alle 10 Sekunden schaltet er um zwischen
+funktionierend (Status 200) Antworten und nicht funktionierend (Status 500)
+4. Im Falle eines Fehlers soll jeweils eine deutlich sichtbare Log-Ausgabe rausgeschrieben werden
+
+### I2) OrderService erweitern
+
+1. Der Order-Service soll nun bei einem Bestellprozess ebenfalls den Kunden abfragen.
+
+### I3) CircuitBreaker einbauen
+
+1. Diese Abfrage soll durch einen CircuitBreaker geschützt werden, der nach 3 Fehlern aufmacht 
+und nach 5 Sekunden in halb-offen umschaltet
+2. Als Fallbackverhalten wird ein Customer-Objekt zurückgegeben, welches nur die `phoneNumber`
+enthält
+
+
+
+### J)
+
+
+
+## X) Prometheus & Grafana
+
+### X1) Docker Setup
+
+1. Legen Sie ein Unterverzeichnis "my-prometheus-grafana" an
+2. Erstellen Sie dort ein `docker-compose.yml` File, welches zwei Services definiert:
+   ````yaml
+   version: "3"
+   services:
+     prometheus:
+       image: prom/prometheus:latest
+       container_name: prometheus
+       volumes:
+         - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+       ports:
+         - "9090:9090"
+       extra_hosts:
+         - "host.docker.internal:host-gateway"
+     grafana:
+       image: grafana/grafana-oss:latest
+       container_name: grafana
+       volumes:
+         - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources/
+       ports:
+         - "3000:3000"
+   ````
+3. Schauen Sie sich diese Datei näher an -- was wird hier alles konfiguriert?
+4. Erstellen (oder kopieren Sie aus dem Beispielprojekt) die notwendige prometheus.yml Datei. Hilfreiche
+Links sind:
+   - https://prometheus.io/docs/prometheus/latest/configuration/configuration/#eureka_sd_config
+   - https://github.com/prometheus/prometheus/blob/release-2.24/documentation/examples/prometheus-eureka.yml
+
+### X2) Docker Run
+
+1. Starten Sie die Docker Container mit `docker-compose up` (aus dem richtigen Unterverzeichnis)
+2. Öffnen Sie http://localhost:9090
+3. Öffnen Sie http://localhost:3000 (User und Kennwort sind "Admin", Änderung mit "Skip" überspringen)
+
+### Xn) Erster Check
+
+1. Kann Prometheus schon via Eureka Dienste finden und dort Metriken abgreifen? 
+Siehe http://localhost:9090/targets
+
+### Xn) Micrometer in Business-Services aktivieren
+
+1. TODO
+
+### Xn) Optional: Datasource provisionieren
+
+1. Legen Sie einen Ordner `./grafana/provisioning/datasources` und darin eine Datei zur
+Provisionierung einer Datasource in Grafana.
+
+### Xn) Optional: Verbindungsprobleme lösen
+
+1. Falls Sie aus dem Prometheus Docker Container Verbindungsprobleme auf andere URLs haben,
+so empfiehlt es sich per compose einen weiteren Container zu starten, in dem die "bash" Shell
+verfügbar ist. Image: "bash:latest" und Container-Name "bash-for-curl"
+2. Dann ist möglich:
+   - `docker exec -it bash-for-curl bash`
+   - `apk add curl` (um curl zu installieren)
+   - `curl http://host.docker.internal:8761/eureka/apps` (um Abfragen zu testen, URL ggf ändern)
