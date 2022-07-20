@@ -422,7 +422,7 @@ funktioniert
 
 ## H) Distributed Tracing
 
-### H1) Zpikon
+### H1) Zipkin
 
 1. Starten Sie Zipkin via Docker: `docker run -d -p 9411:9411 openzipkin/zipkin`
 
@@ -511,8 +511,15 @@ simuliert und 10 andere auf dem schnellen "registerOrder"
 
 #### J3) Bulkhead einbauen
 
-1. Drosseln Sie die Zugriffe auf placeOrder mittels einer @Bulkhead Annotation (Name "placeOrder")
-2. Erstellen Sie dazu folgende Konfiguration:
+1. Fügen Sie folgende Dependency der pom.xml hinzu:
+````xml
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot2</artifactId>
+        </dependency>
+````
+2. Drosseln Sie die Zugriffe auf `placeOrder()` mittels einer `@Bulkhead` Annotation (Name "placeOrder")
+3. Erstellen Sie dazu folgende Konfiguration:
 ````yaml
 resilience4j.bulkhead:
   instances:
