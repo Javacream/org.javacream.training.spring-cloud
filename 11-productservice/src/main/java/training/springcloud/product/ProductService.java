@@ -10,7 +10,7 @@ public class ProductService {
 
     @NewSpan
     public Product getProduct(String productId) {
-        log.info("Service > getProduct({})", productId);
+        log.info("getProduct({})", productId);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ignored) {

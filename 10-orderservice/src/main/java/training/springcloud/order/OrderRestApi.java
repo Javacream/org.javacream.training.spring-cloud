@@ -1,11 +1,13 @@
 package training.springcloud.order;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(OrderRestApi.ROOT_PATH)
+@Slf4j
 public class OrderRestApi {
 
     // --- constants ---
@@ -34,6 +36,7 @@ public class OrderRestApi {
 
     @PostMapping()
     public Order placeOrder(@RequestBody OrderRequest orderRequest) {
+        log.info("Received place-order request, order.phoneNumber={}", orderRequest.getPhoneNumber());
         return this.orderService.placeOrder(
                 orderRequest.getPhoneNumber(),
                 orderRequest.getProductQuantities()

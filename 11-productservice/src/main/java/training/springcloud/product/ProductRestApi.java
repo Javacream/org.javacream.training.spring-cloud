@@ -16,7 +16,7 @@ public class ProductRestApi {
 
     @GetMapping("/products/{productId}")
     public Product getProduct(@PathVariable String productId) {
-        log.info("API > getProduct({})", productId);
+        log.info("Received get-product request, productId={}", productId);
         return this.productService.getProduct(productId);
     }
 }
