@@ -534,9 +534,9 @@ resilience4j.bulkhead:
 
 
 
-## X) Prometheus & Grafana
+## K) Prometheus & Grafana
 
-### X1) Docker Setup
+### K1) Docker Setup
 
 1. Legen Sie ein Unterverzeichnis "my-prometheus-grafana" an
 2. Erstellen Sie dort ein `docker-compose.yml` File, welches zwei Services definiert:
@@ -566,27 +566,39 @@ Links sind:
    - https://prometheus.io/docs/prometheus/latest/configuration/configuration/#eureka_sd_config
    - https://github.com/prometheus/prometheus/blob/release-2.24/documentation/examples/prometheus-eureka.yml
 
-### X2) Docker Run
+### K2) Docker Run
 
 1. Starten Sie die Docker Container mit `docker-compose up` (aus dem richtigen Unterverzeichnis)
 2. Öffnen Sie http://localhost:9090
 3. Öffnen Sie http://localhost:3000 (User und Kennwort sind "Admin", Änderung mit "Skip" überspringen)
 
-### Xn) Erster Check
+### K3) Erster Check
 
 1. Kann Prometheus schon via Eureka Dienste finden und dort Metriken abgreifen? 
 Siehe http://localhost:9090/targets
 
-### Xn) Micrometer in Business-Services aktivieren
+### K4) Micrometer in Business-Services aktivieren
 
-1. TODO
+1. Fügen Sie die benötigten Dependencies der Parent-Pom hinzu, sodass jedes Modul diese automatisch erhält
+2. Starten Sie einen Business-Service neu
+3. Öffnen Sie (richtige Port nehmen!) zB http://localhost:8080/actuator/prometheus
 
-### Xn) Optional: Datasource provisionieren
+### K5) Metrik in Prometheus abfragen
+
+1. Auch Prometheus kann Daten visualisieren, fragen Sie dort eine der Metriken ab, die der Actuator-Endpoint
+Ihnen genannt hat
+
+### K6) Grafana Dashboard anlegen
+
+1. Erstellen Sie in Grafana ein neues Dashboard
+2. Fügen Sie ein Panel hinzu, in dem Sie die vorhin genutzte Metrik nun mittels Grafana visualisieren lassen
+
+### Kn) Optional: Datasource provisionieren
 
 1. Legen Sie einen Ordner `./grafana/provisioning/datasources` und darin eine Datei zur
 Provisionierung einer Datasource in Grafana.
 
-### Xn) Optional: Verbindungsprobleme lösen
+### Kn) Optional: Verbindungsprobleme lösen
 
 1. Falls Sie aus dem Prometheus Docker Container Verbindungsprobleme auf andere URLs haben,
 so empfiehlt es sich per compose einen weiteren Container zu starten, in dem die "bash" Shell
