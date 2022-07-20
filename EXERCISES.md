@@ -391,7 +391,7 @@ hier geändert werden, damit der Programmablauf gleichzeitig mehrere Services an
 Wir wollen nun unsere bisherige Infrastruktur nach Heroku deployen, dafür brauchen wir
 
 - mindestens einen ConfigServer
-- mindestens einen RegistryServer
+- mindestens zwei RegistryServer
 - einen OrderService
 - mehrere ProductServices 
 
@@ -492,7 +492,38 @@ enthält
 
 
 
-### J)
+### J) Bulkhead
+
+#### J1) Neue registerOrder Methode
+
+1. Erweitern Sie den OrderService um eine Business-Method namens `registerOrder`, welches ein
+sehr schnelles und asynchrones Platzieren einer Bestellung darstellen soll.
+2. Statt einer Implementierung dieser Methode können Sie einfach ein `Thread.sleep(50)` hinterlegen.
+3. Der REST Endpunkt gibt deswegen Status ACCEPTED statt OK zurück.
+
+#### J2) Tomcat drosseln und testen
+
+1. Konfigurieren Sie den Tomcat, sodass dieser mit nur maximal 15 Threads arbeitet:
+`server.tomcat.threads.max=15`
+2. Führen Sie einen Lasttest durch, der 10 parallele User auf dem langsamen Bestellprozess "placeOrder"
+simuliert und 10 andere auf dem schnellen "registerOrder"
+3. Wie ist der Transaktions-Throughput?
+
+#### J3) Bulkhead einbauen
+
+1. Drosseln Sie die Zugriffe auf placeOrder mittels einer @Bulkhead Annotation (Name "placeOrder")
+2. Erstellen Sie dazu folgende Konfiguration:
+````yaml
+resilience4j.bulkhead:
+  instances:
+     placeOrder:
+      maxConcurrentCalls: 10
+      maxWaitDuration: 10ms
+````
+
+#### J4) Tomcat erneut testen
+2. Führen Sie den Lasttest erneut durch
+3. Wie ist nun der Transaktions-Throughput?
 
 
 
