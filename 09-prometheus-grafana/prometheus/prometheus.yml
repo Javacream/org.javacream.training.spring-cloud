@@ -7,7 +7,8 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  # make Prometheus scrape itself for metrics.
+  # make Prometheus scrape services provided by Eureka, where metrics are served by Spring Actuator
   - job_name: 'eureka'
+    metrics_path: '/actuator/prometheus'
     eureka_sd_configs:
       - server: http://host.docker.internal:8761/eureka
