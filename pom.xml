@@ -20,8 +20,8 @@
     <modules>
         <module>00-simple</module>
         <module>01-configserver</module>
-        <module>10-orderservice</module>
         <module>02-registryserver</module>
+        <module>10-orderservice</module>
         <module>11-productservice</module>
         <module>12-customerservice</module>
     </modules>
