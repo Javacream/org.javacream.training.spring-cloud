@@ -8,4 +8,4 @@
   * 12 Unterrichtseinheiten mit jeweils 90 Minuten
   * 8:30 - 16:00
     * Mittagspause 45’ (13:00-14:00)
-    * Kaffeepausen 10:30 - 10:45 und 14:30 - 14:45
+    * Kaffeepausen 10:00 - 10:15 und 11:45 - 12:00
