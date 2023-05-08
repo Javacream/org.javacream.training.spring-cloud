@@ -1,4 +1,4 @@
-package org.javacream.books.warehouse.test;
+package org.javacream.books.isbngenerator.test;
 
 import org.javacream.books.isbngenerator.api.IsbnGenerator;
 import org.junit.jupiter.api.Test;

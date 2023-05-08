@@ -1,9 +1,9 @@
 package org.javacream.store.impl.decorators;
 
+import java.util.Date;
+
 import org.javacream.store.api.StoreService;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 public class AuditingStoreService implements StoreService{

@@ -11,12 +11,12 @@ import org.springframework.test.context.ActiveProfiles;
 public class FindOrderTest {
     @Autowired private OrderService orderService;
 
-    //@Test
+    @Test
     public void order1IsOk(){
         Order order = orderService.findOrderById(1l);
         Assertions.assertEquals(Order.OrderStatus.OK, order.getStatus());
     }
-    //@Test
+    @Test
     public void order2IsPending(){
         Order order = orderService.findOrderById(2l);
         Assertions.assertEquals(Order.OrderStatus.PENDING, order.getStatus());

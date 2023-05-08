@@ -1,5 +1,9 @@
 package org.javacream.books.warehouse.impl;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
 import org.javacream.books.isbngenerator.api.IsbnGenerator;
 import org.javacream.books.warehouse.api.Book;
 import org.javacream.books.warehouse.api.BookException;
@@ -9,10 +13,6 @@ import org.javacream.store.api.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Repository
@@ -57,10 +57,10 @@ public class JpaBooksService implements BooksService {
 	}
 
 	public void deleteBookByIsbn(String isbn) throws BookException {
-		try {
+		if (booksRepository.existsById(isbn)){
 			booksRepository.deleteById(isbn);
-		} catch (RuntimeException e) {
-			throw new BookException(BookException.BookExceptionType.NOT_DELETED, e.getMessage());
+		} else {
+			throw new BookException(BookException.BookExceptionType.NOT_DELETED, isbn);
 		}
 	}
 

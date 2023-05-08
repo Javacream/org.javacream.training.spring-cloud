@@ -1,5 +1,8 @@
 package org.javacream;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.javacream.books.order.api.Order;
 import org.javacream.books.warehouse.api.Book;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -7,9 +10,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootApplication
 public class JavacreamApplication {

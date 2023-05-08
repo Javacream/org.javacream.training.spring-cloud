@@ -1,9 +1,10 @@
 package org.javacream.books.order.api;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Objects;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 @Entity
 @Table(name="ORDERS")
 public class Order {
@@ -14,7 +15,7 @@ public class Order {
     private Double totalPrice;
     private OrderStatus status;
 
-    private Order(){}
+    Order(){}
     public Order(Long orderId, String isbn, Integer number, Double totalPrice, OrderStatus status) {
         this.orderId = orderId;
         this.isbn = isbn;

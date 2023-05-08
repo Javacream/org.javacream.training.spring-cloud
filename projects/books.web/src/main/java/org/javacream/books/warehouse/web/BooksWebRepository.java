@@ -1,5 +1,7 @@
 package org.javacream.books.warehouse.web;
 
+import java.util.Optional;
+
 import org.javacream.books.warehouse.api.Book;
 import org.javacream.books.warehouse.api.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 @RestController
 public class BooksWebRepository {

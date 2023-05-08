@@ -1,13 +1,13 @@
 package org.javacream.books.warehouse.impl.decorators;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.javacream.books.warehouse.api.Book;
 import org.javacream.books.warehouse.api.BookException;
 import org.javacream.books.warehouse.api.BooksService;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Component
 public class CloningBooksService implements BooksService {

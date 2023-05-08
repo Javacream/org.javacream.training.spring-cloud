@@ -12,12 +12,12 @@ import org.springframework.test.context.ActiveProfiles;
 public class NewOrderTest {
     @Autowired private OrderService orderService;
 
-    @Test public void order40Isbn1CreatesOkOrder(){
-        Order order = orderService.order("Isbn1", 40);
+    @Test public void order40Isbn100CreatesOkOrder(){
+        Order order = orderService.order("Isbn100", 40);
         Assertions.assertEquals(Order.OrderStatus.OK, order.getStatus());
     }
-    @Test public void order50Isbn1CreatesPendingOrder(){
-        Order order = orderService.order("Isbn1", 50);
+    @Test public void order50Isbn100CreatesPendingOrder(){
+        Order order = orderService.order("Isbn100", 50);
         Assertions.assertEquals(Order.OrderStatus.PENDING, order.getStatus());
     }
     @Test public void order50UnknownIsbnCreatesUnavailableOrder(){
