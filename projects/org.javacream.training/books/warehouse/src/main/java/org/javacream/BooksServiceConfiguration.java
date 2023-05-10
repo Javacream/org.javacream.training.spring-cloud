@@ -1,14 +1,9 @@
 package org.javacream;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
 public class BooksServiceConfiguration {
-    public static void main(String[] args) {
-        SpringApplication springApplication = new SpringApplication(BooksServiceConfiguration.class);
-        springApplication.setAdditionalProfiles("prod");
-        springApplication.run(args);
-    }
-
 }

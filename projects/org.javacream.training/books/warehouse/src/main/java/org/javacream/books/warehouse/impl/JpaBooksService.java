@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.javacream.books.isbngenerator.api.IsbnGenerator;
+import org.javacream.books.store.BooksStoreService;
 import org.javacream.books.warehouse.api.Book;
 import org.javacream.books.warehouse.api.BookException;
 import org.javacream.books.warehouse.api.BooksRepository;
 import org.javacream.books.warehouse.api.BooksService;
-import org.javacream.store.api.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +20,7 @@ public class JpaBooksService implements BooksService {
 	@IsbnGenerator.SequenceStrategy
 	private IsbnGenerator isbnGenerator;
 	@Autowired
-	private StoreService storeService;
+	private BooksStoreService storeService;
 	@Autowired
 	private BooksRepository booksRepository;
 	public String newBook(String title) throws BookException {
@@ -37,7 +37,7 @@ public class JpaBooksService implements BooksService {
 		Optional<Book> result = booksRepository.findById(isbn);
 		if (result.isPresent()) {
 			Book book = result.get();
-			book.setAvailable(storeService.getStock("books", isbn) > 0);
+			book.setAvailable(Integer.parseInt(storeService.getStockForBook("books", isbn)) > 0);
 			return book;
 		}
 		throw new BookException(BookException.BookExceptionType.NOT_FOUND, isbn);
